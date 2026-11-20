@@ -6,7 +6,9 @@ A survey tool for collecting participants' income and spending data, ahead of a 
 - Responses are stored in **MongoDB**.
 - A Python **`User`** class processes the data, and an export script loops through every response and writes a **CSV**.
 - A **Jupyter notebook** loads the CSV, charts income by age and spending by gender, and exports the charts for a client PowerPoint.
-- The app and database run locally in **Docker**.
+- The app and database run in **Docker**, both locally and on **AWS EC2**.
+
+**Live app:** <http://13.48.78.60>
 
 ## Files
 
@@ -28,6 +30,7 @@ A survey tool for collecting participants' income and spending data, ahead of a 
 
 - **Docker Desktop**, for the app and MongoDB.
 - **Python 3.11+**, for the export script, seed script and notebook.
+- **AWS CLI v2, signed in to an AWS account**, only for deploying to AWS.
 
 ## How to run
 
