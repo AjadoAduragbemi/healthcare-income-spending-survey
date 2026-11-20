@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+.venv/
+venv/
+.ipynb_checkpoints/
+.env
+# AWS Agent Toolkit rules for AI coding tools (local only)
+CLAUDE.md

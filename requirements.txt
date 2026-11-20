@@ -1,0 +1,6 @@
+# For export_to_csv.py, seed_sample_data.py and analysis.ipynb (run on your machine)
+pymongo==4.20.0
+pandas>=2.2
+matplotlib>=3.8
+jupyterlab>=4.0
+ipykernel>=6.29

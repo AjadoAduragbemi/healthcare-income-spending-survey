@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Income &amp; Spending Survey</h1>
+<p class="intro">Help us understand how people spend their income. It takes about a minute, and no names or contact details are collected.</p>
+
+{% if errors %}
+<div class="errors" role="alert">
+  <strong>Please fix the following:</strong>
+  <ul>{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<form method="post" novalidate>
+  <fieldset>
+    <legend>About you</legend>
+    <label for="age">Age</label>
+    <input type="number" id="age" name="age" min="{{ min_age }}" max="{{ max_age }}" required
+           value="{{ form.get('age', '') }}">
+
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender" required>
+      <option value="" disabled {% if not form.get('gender') %}selected{% endif %}>Select…</option>
+      {% for gender in genders %}
+      <option value="{{ gender }}" {% if form.get('gender') == gender %}selected{% endif %}>{{ gender }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="total_income">Total monthly income ($)</label>
+    <input type="number" id="total_income" name="total_income" min="0" step="0.01" required
+           value="{{ form.get('total_income', '') }}">
+  </fieldset>
+
+  <fieldset>
+    <legend>Monthly expenses</legend>
+    <p class="hint">Tick each category you spend on and enter the amount.</p>
+    {% for key, label in categories.items() %}
+    {% set ticked = form.get('expense_' ~ key) %}
+    <div class="expense">
+      <label class="check">
+        <input type="checkbox" name="expense_{{ key }}" value="on" data-amount="amount_{{ key }}"
+               {% if ticked %}checked{% endif %}>
+        {{ label }}
+      </label>
+      <input type="number" id="amount_{{ key }}" name="amount_{{ key }}" min="0" step="0.01"
+             placeholder="Amount ($)" aria-label="{{ label }} amount"
+             value="{{ form.get('amount_' ~ key, '') }}" {% if not ticked %}disabled{% endif %}>
+    </div>
+    {% endfor %}
+  </fieldset>
+
+  <button type="submit">Submit</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Enable each amount box only while its category is ticked.
+  document.querySelectorAll('input[type="checkbox"][data-amount]').forEach(function (checkbox) {
+    var amount = document.getElementById(checkbox.dataset.amount);
+    checkbox.addEventListener('change', function () {
+      amount.disabled = !checkbox.checked;
+      if (checkbox.checked) { amount.focus(); } else { amount.value = ''; }
+    });
+  });
+</script>
+{% endblock %}

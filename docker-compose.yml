@@ -1,0 +1,28 @@
+# Runs the survey locally: MongoDB + the Flask app.
+#   docker compose up --build -d     then open http://localhost:8080
+services:
+  mongo:
+    image: mongo:8.0
+    ports:
+      - "127.0.0.1:27017:27017"      # Lets export_to_csv.py and seed_sample_data.py connect from this machine
+    volumes:
+      - mongo-data:/data/db          # Keeps responses when containers restart
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      - "${WEB_PORT:-8080}:5000"     # Host port: 8080 locally (macOS uses 5000 for AirPlay); 80 on the server
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: healthcare_survey
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
